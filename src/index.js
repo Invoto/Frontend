@@ -1,10 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  Router,
-  Routes,
-  Route,
-} from "react-router-dom";
 import App from './App';
 
 /* Importing Styles */
@@ -19,11 +14,7 @@ import 'mdb-react-ui-kit/dist/css/mdb.min.css'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/" component={App} />
-      </Routes>
-    </Router>,
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
