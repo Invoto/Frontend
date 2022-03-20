@@ -36,7 +36,7 @@ class WebNavBar extends React.Component {
                                     routes.map((entry, key) => {
                                         if (!entry.hasOwnProperty("rightAlign")) {
                                             return (
-                                                <MDBNavbarItem key={key}>
+                                                <MDBNavbarItem key={key} className="mx-3">
                                                     <MDBNavbarLink href={entry.path}>{entry.name}</MDBNavbarLink>
                                                 </MDBNavbarItem>
                                             );
