@@ -2,6 +2,11 @@
 
 This is the Web Frontend for Invoto Project. Created with React.
 
+## Other Toolkits & Libraries Used
+
+We use the following list of libraries and toolkits for our design.
+1. Material Design for Bootsrap & React (<https://mdbootstrap.com/>)
+
 ## Available Scripts
 
 In the project directory, you can run:
