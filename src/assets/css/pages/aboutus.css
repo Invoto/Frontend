@@ -1,0 +1,45 @@
+.col-example {
+  margin: auto;
+  /*background-color:'rgba(0, 0, 0, 0.7)';*/
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.heading h1 {
+  font-family: "Montserrat";
+  text-align: center;
+  color: white;
+}
+
+.intro-content {
+  background-color: rgba(0, 0, 0, 1);
+  background-size: cover;
+  height: 100%;
+}
+
+.description {
+  font-family: "Montserrat";
+  color: white;
+  text-align: justify;
+  width: 100%;
+}
+
+.team-title {
+  font-family: "Montserrat";
+  font-weight: 600;
+  color: black;
+  text-align: center;
+}
+
+.team-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 200px;
+}
+
+a {
+  display: block;
+  color: black;
+  text-decoration: none; /* no underline */
+}
