@@ -5,7 +5,16 @@ import Volunteer from "../pages/Volunteer";
 import APIDocs from "../pages/APIDocs";
 import Accounts from "../pages/Accounts";
 
-const routes = [
+import DashboardHome from "../pages/dashboard/DashboardHome";
+
+const routesConfig = {
+    roots: {
+        web: "/",
+        dashboard: "dashboard/",
+    }
+};
+
+const routesWeb = [
     {
         path: "/",
         name: "Home",
@@ -39,4 +48,12 @@ const routes = [
     },
 ];
 
-export default routes;
+const routesDashboard = [
+    {
+        path: "/",
+        name: "Dashboard",
+        component: DashboardHome,
+    },
+];
+
+export { routesConfig, routesWeb, routesDashboard };

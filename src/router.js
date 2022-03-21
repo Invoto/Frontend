@@ -3,17 +3,27 @@ import {
     Routes,
     Route,
 } from "react-router-dom";
-import routes from "./config/routes";
+import { routesConfig, routesWeb, routesDashboard } from "./config/routes";
 import { getRouteFromEntry } from "./utils/routes";
 
 function InvotoRouter(props) {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<props.layout routes={routes} />}>
+                {/* Web Routes */}
+                <Route path={routesConfig.roots.web} element={<props.layoutWeb routes={routesWeb} />}>
                     {
-                        routes.map((entry, key) => {
-                            return getRouteFromEntry(entry, key)
+                        routesWeb.map((entry, key) => {
+                            return getRouteFromEntry(entry, key);
+                        })
+                    }
+                </Route>
+
+                {/* Dashboard Routes */}
+                <Route path={routesConfig.roots.dashboard} element={<props.layoutDashboard routes={routesDashboard} />}>
+                    {
+                        routesDashboard.map((entry, key) => {
+                            return getRouteFromEntry(entry, key);
                         })
                     }
                 </Route>

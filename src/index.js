@@ -7,9 +7,6 @@ import App from './App';
 // Global CSS File
 import "./assets/css/index.css"
 
-// Material Design
-import 'mdb-react-ui-kit/dist/css/mdb.min.css'
-
 /* End of Style Imports */
 
 ReactDOM.render(
