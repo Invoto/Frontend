@@ -11,7 +11,7 @@ function getRouteFromEntry(entry, key) {
     else {
         return (
             <Route
-                path={entry.path}
+                path={entry.path.substr(1)}
                 element={<entry.component />}
                 key={key}
             />

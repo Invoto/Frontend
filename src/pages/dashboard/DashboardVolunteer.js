@@ -1,12 +1,12 @@
 import React from 'react';
 import DashboardContext from "../../contexts/Dashboard";
 
-class DashboardHome extends React.Component {
+class DashboardVolunteer extends React.Component {
 
     static contextType = DashboardContext;
 
     componentDidMount() {
-        this.context.setPageTitle("Dashboard");
+        this.context.setPageTitle("Volunteer");
     }
 
     render() {
@@ -17,4 +17,4 @@ class DashboardHome extends React.Component {
 
 }
 
-export default DashboardHome;
+export default DashboardVolunteer;
