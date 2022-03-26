@@ -14,6 +14,7 @@ import {
     MDBContainer,
 } from 'mdb-react-ui-kit';
 import { isLoginFormValid, isEmailValid } from "../helpers/validators/login";
+import { isRegisterFormValid } from "../helpers/validators/register";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
@@ -36,11 +37,18 @@ class Accounts extends React.Component {
 
         // References
         this.loginTxtEmail = React.createRef();
+        this.loginTxtPassword = React.createRef();
+        this.registerTxtName = React.createRef();
+        this.registerTxtEmail = React.createRef();
+        this.registerTxtPassword = React.createRef();
+        this.registerTxtPasswordRepeat = React.createRef();
 
         this.showNotification = this.showNotification.bind(this);
         this.closeNotification = this.closeNotification.bind(this);
         this.handleLoginRegisterClick = this.handleLoginRegisterClick.bind(this);
         this.handleForgotPassword = this.handleForgotPassword.bind(this);
+        this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
+        this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
     }
 
     showNotification(severity, message) {
@@ -75,12 +83,50 @@ class Accounts extends React.Component {
     handleForgotPassword(e) {
         e.preventDefault();
 
-        if (!isEmailValid(this.loginTxtEmail.current.value)) {
-            this.showNotification("error", "Email not provided/Invalid email");
+        let vdResults = isEmailValid(this.loginTxtEmail.current.value);
+
+        if (!vdResults[0]) {
+            this.showNotification("error", vdResults[1]);
             return false;
         }
         else {
             // TODO: Continue Resetting with Backend.
+        }
+    }
+
+    handleLoginSubmit(e) {
+        e.preventDefault();
+
+        let vdResults = isLoginFormValid(
+            this.loginTxtEmail.current.value,
+            this.loginTxtPassword.current.value,
+        );
+
+        if (!vdResults[0]) {
+            this.showNotification("error", vdResults[1]);
+            return false;
+        }
+        else {
+            // TODO: Continue Resetting with Backend.
+        }
+    }
+
+    handleRegisterSubmit(e) {
+        e.preventDefault();
+
+        let vdResults = isRegisterFormValid(
+            this.registerTxtName.current.value,
+            this.registerTxtEmail.current.value,
+            this.registerTxtPassword.current.value,
+            this.registerTxtPasswordRepeat.current.value,
+        );
+
+        if (!vdResults[0]) {
+            this.showNotification("error", vdResults[1]);
+            return false;
+        }
+        else {
+            // TODO: Continue with Backend.
         }
     }
 
@@ -114,13 +160,13 @@ class Accounts extends React.Component {
 
                                 <MDBTabsContent>
                                     <MDBTabsPane show={loginRegisterActive === 'login'}>
-                                        <form>
+                                        <form onSubmit={this.handleLoginSubmit}>
                                             <div className='text-center mb-3'>
                                                 <p>Sign in with:</p>
                                             </div>
 
                                             <MDBInput className='mb-4' type='email' inputRef={this.loginTxtEmail} label='Email address' />
-                                            <MDBInput className='mb-4' type='password' id='form7Example2' label='Password' />
+                                            <MDBInput className='mb-4' type='password' inputRef={this.loginTxtPassword} label='Password' />
 
                                             <MDBRow className='mb-4'>
                                                 <MDBCol className='d-flex justify-content-center'>
@@ -143,16 +189,15 @@ class Accounts extends React.Component {
                                         </form>
                                     </MDBTabsPane>
                                     <MDBTabsPane show={loginRegisterActive === 'register'}>
-                                        <form>
+                                        <form onSubmit={this.handleRegisterSubmit}>
                                             <div className='text-center mb-3'>
                                                 <p>Sign up with:</p>
                                             </div>
 
-                                            <MDBInput className='mb-4' id='form8Example1' label='Name' />
-                                            <MDBInput className='mb-4' id='form8Example2' label='Username' />
-                                            <MDBInput className='mb-4' type='email' id='form8Example3' label='Email address' />
-                                            <MDBInput className='mb-4' type='password' id='form8Example4' label='Password' />
-                                            <MDBInput className='mb-4' type='password' id='form8Example5' label='Repeat password' />
+                                            <MDBInput className='mb-4' inputRef={this.registerTxtName} label='Name' />
+                                            <MDBInput className='mb-4' type='email' inputRef={this.registerTxtEmail} label='Email Address' />
+                                            <MDBInput className='mb-4' type='password' inputRef={this.registerTxtPassword} label='Password' />
+                                            <MDBInput className='mb-4' type='password' inputRef={this.registerTxtPasswordRepeat} label='Repeat password' />
 
                                             <MDBBtn type='submit' className='mb-4' block>
                                                 Sign Up
