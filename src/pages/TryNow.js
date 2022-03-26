@@ -2,7 +2,8 @@ import React from 'react';
 import {
     MDBContainer, MDBRow, MDBCol,
     MDBCard, MDBCardBody, MDBCardTitle, MDBCardSubTitle, MDBCardText, MDBCardLink,
-    MDBFile, MDBBtn
+    MDBFile, MDBBtn,
+    MDBSpinner
 } from 'mdb-react-ui-kit';
 
 import '../assets/css/pages/trynow.css';
@@ -18,6 +19,7 @@ class TryNow extends React.Component {
         };
 
         this.divImgRender = React.createRef();
+        this.divImgWaiter = React.createRef();
 
         this.handleImageChange = this.handleImageChange.bind(this);
     }
@@ -84,6 +86,13 @@ class TryNow extends React.Component {
                                 <MDBCardBody>
                                     <MDBCardTitle><h2>Results</h2></MDBCardTitle>
                                     <MDBCardText>Submit an image of an invoice to start processing.</MDBCardText>
+
+                                    <div ref={this.divImgWaiter} className='d-flex align-items-center'>
+                                        <MDBSpinner grow className='float-start me-4'>
+                                            <span className='visually-hidden'>Loading...</span>
+                                        </MDBSpinner>
+                                        <MDBCardText>Waiting for an Image...</MDBCardText>
+                                    </div>
 
                                     <div id='frmTryNowOutputs' className='outputs'></div>
                                 </MDBCardBody>
