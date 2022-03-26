@@ -1,15 +1,19 @@
 
+.home-body {
+    font-family: "Montserrat";
+}
+
 .cover {
-    height: 650px;
-    width:1536px;
-    background-size:'cover';
+    min-height: 450px;
+    width: auto;
+    background-size: cover;
+    background-position: center;
     background-image: url('../../img/homebg.png');
     background-color: 'rgba(0,0,0,0.5)';
     background-repeat: 'no-repeat'
 }
 
 .title {
-    font-family: "Montserrat";
     font-weight: 600;
 }
 
@@ -26,4 +30,8 @@
 .home-description p {
     font-family: "Montserrat";
     text-align: center;
+}
+
+.home-portfolio-image {
+    max-height: 483px;
 }
