@@ -66,7 +66,7 @@ class Volunteer extends React.Component {
                                     </p>
                                 </MDBCardText>
                                 <MDBCardText>
-                                    <p className='fs-5'>
+                                    <p className='fs-5 volunteer-desc'>
                                         Furthermore, if you are interested in contributing regularly, you can <a href='accounts'>create an account</a> with us.
                                     </p>
                                 </MDBCardText>
