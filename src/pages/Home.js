@@ -22,7 +22,7 @@ class Home extends React.Component {
 
   render() {
     return (
-      <div className='home-body'>
+      <div className='body'>
         <header>
           <div
             id='homebg'

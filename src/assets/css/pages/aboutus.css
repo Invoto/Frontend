@@ -1,3 +1,4 @@
+
 .col-example {
   margin: auto;
   /*background-color:'rgba(0, 0, 0, 0.7)';*/
@@ -13,23 +14,14 @@
 }
 
 .intro-content {
-  background-color: rgba(0, 0, 0, 1);
+  background-image: url("../../img/aboutusbg.jpg");
   background-size: cover;
-  height: 100%;
+  min-height: 368px;
 }
 
 .description {
-  font-family: "Montserrat";
-  color: white;
   text-align: justify;
   width: 100%;
-}
-
-.team-title {
-  font-family: "Montserrat";
-  font-weight: 600;
-  color: black;
-  text-align: center;
 }
 
 .team-image {
@@ -42,4 +34,14 @@ a {
   display: block;
   color: black;
   text-decoration: none; /* no underline */
+}
+
+.expertise-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.expertise-list li {
+  display: inline;
+  float: left;
 }
