@@ -30,23 +30,6 @@ class AboutUs extends React.Component {
           </div>
         </div>
 
-        {/* <div className="intro-content">
-          <>
-            <MDBContainer>
-              <div className="heading p-4">
-                <h1>About Us</h1>
-              </div>
-            </MDBContainer>
-
-            <MDBContainer breakpoint="sm">
-              <p className="description">
-                We are a group of Junior Undergraduates affiliated to Department of Statistics and Computer Science at University of Kelaniya. Invoto was initially undertaken as the group project for a course module and developed into a fully fledged product. We excel at AI and Web Technologies and we strive to bring different ecosystems to life. We created Invoto to facilitate buying-selling processes in the local, Sri Lankan context. We are based in Colombo, Sri Lanka.
-              </p>
-              <br />
-            </MDBContainer>
-          </>
-        </div> */}
-
         {/* Content of the Page */}
         <MDBContainer className="mt-5">
           <MDBRow>
