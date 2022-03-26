@@ -1,0 +1,22 @@
+
+.container {
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-left: 10%;
+    margin-right: 10%;
+    left: 0;
+    right: 0;
+}
+
+.render-image {
+    display: none;
+}
+
+.render-image img {
+    max-width: 400px;
+    max-height: 400px;
+}
+
+.outputs {
+    min-height: 90px;
+}
