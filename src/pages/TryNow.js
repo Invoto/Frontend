@@ -53,7 +53,7 @@ class TryNow extends React.Component {
                 </div>
 
                 {/* Contents */}
-                <MDBContainer className='container'>
+                <MDBContainer className='trynow-container'>
                     <MDBRow>
                         <MDBCol md='6'>
                             <MDBCard color='primary'>
