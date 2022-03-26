@@ -38,11 +38,11 @@ class Home extends React.Component {
                   </div>
                   <a
                     className='btn btn-outline-light btn-lg m-2'
-                    href='about-us'
+                    href='try-now'
                     role='button'
                     rel='nofollow'
                   >
-                    ABOUT US
+                    Try it Now
                   </a>
                 </div>
               </div>
