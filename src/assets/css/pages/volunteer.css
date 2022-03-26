@@ -26,6 +26,6 @@
   text-align: justify;
 }
 
-a:link, a:visited {
+.volunteer-desc a:link, a:visited {
   display: inline;
 }
