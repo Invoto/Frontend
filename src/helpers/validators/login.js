@@ -15,7 +15,12 @@ function isLoginFormValid(email, password) {
         password: password,
     });
 
-    return [!result.error, result.error];
+    if (!result.error) {
+        return [!result.error, ""];
+    }
+    else {
+        return [!result.error, result.error["message"]];
+    }
 }
 
 function isEmailValid(email) {
@@ -23,7 +28,12 @@ function isEmailValid(email) {
         email: email,
     });
 
-    return [!result.error, result.error];
+    if (!result.error) {
+        return [!result.error, ""];
+    }
+    else {
+        return [!result.error, result.error["message"]];
+    }
 }
 
 export { isLoginFormValid, isEmailValid };
