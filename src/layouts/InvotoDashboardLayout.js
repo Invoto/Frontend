@@ -14,6 +14,8 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { routesConfig, routesDashboard } from '../config/routes';
+import useToken from '../components/Dashboard/useToken';
+import { Navigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -22,15 +24,6 @@ const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
 function InvotoDashboard(props) {
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [pageTitle, setPageTitle] = React.useState("");
-
-    const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
-    };
-
-    const contextElements = {
-        setPageTitle: setPageTitle,
-    };
-
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const [mode, setMode] = React.useState(prefersDarkMode ? 'dark' : 'light');
     const colorMode = React.useMemo(
@@ -51,6 +44,22 @@ function InvotoDashboard(props) {
             }),
         [mode],
     );
+
+    const { token, setToken } = useToken();
+
+    if (!token) {
+        return (
+            <Navigate replace to="/accounts" />
+        );
+    }
+
+    const handleDrawerToggle = () => {
+        setMobileOpen(!mobileOpen);
+    };
+
+    const contextElements = {
+        setPageTitle: setPageTitle,
+    };
 
     return (
         <DashboardProvider value={contextElements}>
