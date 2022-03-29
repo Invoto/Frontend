@@ -136,7 +136,7 @@ class Accounts extends React.Component {
             params.append("password", this.loginTxtPassword.current.value);
 
             axios({
-                method: "post",
+                method: "POST",
                 url: process.env.REACT_APP_BACKEND_URL + "/auth/login",
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -154,6 +154,8 @@ class Accounts extends React.Component {
                 else {
                     this.showNotification("error", res.data.message);
                 }
+            }).catch((error) => {
+                this.showNotification("error", error);
             });
         }
     }
@@ -173,7 +175,39 @@ class Accounts extends React.Component {
             return false;
         }
         else {
-            // TODO: Continue with Backend.
+            const params = new URLSearchParams();
+            params.append("name", this.registerTxtName.current.value);
+            params.append("email", this.registerTxtEmail.current.value);
+            params.append("password", this.registerTxtPassword.current.value);
+            params.append("passwordRepeat", this.registerTxtPasswordRepeat.current.value);
+
+            axios({
+                method: "POST",
+                url: process.env.REACT_APP_BACKEND_URL + "/auth/register",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: params,
+                validateStatus: () => true,
+            }).then((res) => {
+                if (res.data.status) {
+                    this.showNotification("success", "Successful registration. Please login.");
+
+                    // Resetting the text boxes in the registration form.
+                    this.registerTxtName.current.value = "";
+                    this.registerTxtEmail.current.value = "";
+                    this.registerTxtPassword.current.value = "";
+                    this.registerTxtPasswordRepeat.current.value = "";
+
+                    // Trigger a login click to send to login form.
+                    this.handleLoginRegisterClick('login');
+                }
+                else {
+                    this.showNotification("error", res.data.message);
+                }
+            }).catch((error) => {
+                this.showNotification("error", error);
+            });
         }
     }
 
