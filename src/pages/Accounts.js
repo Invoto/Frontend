@@ -114,7 +114,32 @@ class Accounts extends React.Component {
             return false;
         }
         else {
-            // TODO: Continue Resetting with Backend.
+            this.showNotification("info", "Please wait...");
+            const params = new URLSearchParams();
+            params.append("email", this.loginTxtEmail.current.value);
+
+            axios({
+                method: "POST",
+                url: process.env.REACT_APP_BACKEND_URL + "/auth/forgot",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: params,
+                validateStatus: () => true,
+            }).then((res) => {
+
+                if (res.data.status) {
+                    this.closeNotification();
+                    this.showNotification("success", "Successful request. Check your emails.");
+                }
+                else {
+                    this.closeNotification();
+                    this.showNotification("error", res.data.message);
+                }
+            }).catch((error) => {
+                this.closeNotification();
+                this.showNotification("error", error);
+            });
         }
     }
 
