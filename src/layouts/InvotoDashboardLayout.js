@@ -3,6 +3,7 @@ import { useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
+import { Button, Tooltip } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,6 +13,7 @@ import AdminSidebar from "../components/Sidebars/AdminSidebar";
 import { DashboardProvider } from "../contexts/Dashboard";
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import LogoutIcon from '@mui/icons-material/Logout';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { routesConfig, routesDashboard } from '../config/routes';
 import useToken from '../components/Dashboard/useToken';
@@ -89,10 +91,19 @@ function InvotoDashboard(props) {
                                 </Typography>
 
                                 <Box>
-                                    {theme.palette.mode} mode
-                                    <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
-                                        {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-                                    </IconButton>
+                                    <Tooltip title={theme.palette.mode + " mode"}>
+                                        <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
+                                            {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
+
+                                <Box>
+                                    <Tooltip title="Logout">
+                                        <IconButton sx={{ ml: 1 }} color="inherit">
+                                            <LogoutIcon />
+                                        </IconButton>
+                                    </Tooltip>
                                 </Box>
                             </Toolbar>
                         </AppBar>
@@ -115,7 +126,7 @@ function InvotoDashboard(props) {
                     </Box>
                 </ThemeProvider>
             </ColorModeContext.Provider>
-        </DashboardProvider>
+        </DashboardProvider >
     );
 }
 

@@ -156,6 +156,8 @@ class Accounts extends React.Component {
             return false;
         }
         else {
+            this.showNotification("info", "Please wait...");
+
             const params = new URLSearchParams();
             params.append("email", this.loginTxtEmail.current.value);
             params.append("password", this.loginTxtPassword.current.value);
@@ -170,6 +172,7 @@ class Accounts extends React.Component {
                 validateStatus: () => true,
             }).then((res) => {
                 if (res.data.status) {
+                    this.closeNotification();
                     this.showNotification("success", "Successful. Redirecting...");
                     setTimeout(() => {
                         this.closeNotification();
@@ -177,9 +180,11 @@ class Accounts extends React.Component {
                     }, 1000);
                 }
                 else {
+                    this.closeNotification();
                     this.showNotification("error", res.data.message);
                 }
             }).catch((error) => {
+                this.closeNotification();
                 this.showNotification("error", error);
             });
         }
@@ -200,6 +205,8 @@ class Accounts extends React.Component {
             return false;
         }
         else {
+            this.showNotification("info", "Please wait...");
+
             const params = new URLSearchParams();
             params.append("name", this.registerTxtName.current.value);
             params.append("email", this.registerTxtEmail.current.value);
@@ -216,6 +223,7 @@ class Accounts extends React.Component {
                 validateStatus: () => true,
             }).then((res) => {
                 if (res.data.status) {
+                    this.closeNotification();
                     this.showNotification("success", "Successful registration. Please login.");
 
                     // Resetting the text boxes in the registration form.
@@ -228,9 +236,11 @@ class Accounts extends React.Component {
                     this.handleLoginRegisterClick('login');
                 }
                 else {
+                    this.closeNotification();
                     this.showNotification("error", res.data.message);
                 }
             }).catch((error) => {
+                this.closeNotification();
                 this.showNotification("error", error);
             });
         }
