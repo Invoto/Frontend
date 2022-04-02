@@ -30,11 +30,12 @@ class Accounts extends React.Component {
 
         // Initialize the State for this Page.
         this.state = {
+            body: null,
             loginRegisterActive: "login",
             notificationOpen: false,
             notificationSeverity: "success",
             notificationMessage: "",
-            token: null,
+            token: this._getUserToken(),
         };
 
         // References
@@ -59,7 +60,7 @@ class Accounts extends React.Component {
     }
 
     _setUserToken(token) {
-        localStorage.setItem('token', token);
+        localStorage.setItem("token", token);
         this.setState({
             token: token,
         });
@@ -127,7 +128,6 @@ class Accounts extends React.Component {
                 data: params,
                 validateStatus: () => true,
             }).then((res) => {
-
                 if (res.data.status) {
                     this.closeNotification();
                     this.showNotification("success", "Successful request. Check your emails.");
@@ -177,6 +177,9 @@ class Accounts extends React.Component {
                     setTimeout(() => {
                         this.closeNotification();
                         this._setUserToken(res.data.token);
+                        this.setState({
+                            body: <Navigate replace to="/dashboard" />,
+                        });
                     }, 1000);
                 }
                 else {
@@ -246,99 +249,110 @@ class Accounts extends React.Component {
         }
     }
 
+    componentDidMount() {
+        let { token } = this.state;
+
+        assessTokenValidity(token).then((isTokenValid) => {
+            if (isTokenValid) {
+                this.setState({
+                    body: <Navigate replace to="/dashboard" />,
+                });
+            }
+        });
+    }
+
     render() {
-        let { loginRegisterActive, notificationOpen, notificationSeverity, notificationMessage, token } = this.state;
+        let { body, loginRegisterActive, notificationOpen, notificationSeverity, notificationMessage } = this.state;
 
-        if (token) {
-            return (<Navigate replace to="/dashboard" />);
-        }
-        else {
-            return (
-                <div className='body'>
-                    <MDBContainer>
-                        <MDBRow>
-                            <MDBCol className='d-flex justify-content-center'>
-                                <div className='my-5'>
-                                    <MDBTabs pills justify className='mb-3'>
-                                        <MDBTabsItem>
-                                            <MDBTabsLink
-                                                onClick={() => this.handleLoginRegisterClick('login')}
-                                                active={loginRegisterActive === 'login'}
-                                            >
-                                                Login
-                                            </MDBTabsLink>
-                                        </MDBTabsItem>
-                                        <MDBTabsItem>
-                                            <MDBTabsLink
-                                                onClick={() => this.handleLoginRegisterClick('register')}
-                                                active={loginRegisterActive === 'register'}
-                                            >
-                                                Register
-                                            </MDBTabsLink>
-                                        </MDBTabsItem>
-                                    </MDBTabs>
+        return (
+            <div className='body'>
+                <MDBContainer>
+                    <MDBRow>
+                        <MDBCol className='d-flex justify-content-center'>
+                            <div className='my-5'>
+                                <MDBTabs pills justify className='mb-3'>
+                                    <MDBTabsItem>
+                                        <MDBTabsLink
+                                            onClick={() => this.handleLoginRegisterClick('login')}
+                                            active={loginRegisterActive === 'login'}
+                                        >
+                                            Login
+                                        </MDBTabsLink>
+                                    </MDBTabsItem>
+                                    <MDBTabsItem>
+                                        <MDBTabsLink
+                                            onClick={() => this.handleLoginRegisterClick('register')}
+                                            active={loginRegisterActive === 'register'}
+                                        >
+                                            Register
+                                        </MDBTabsLink>
+                                    </MDBTabsItem>
+                                </MDBTabs>
 
-                                    <MDBTabsContent>
-                                        <MDBTabsPane show={loginRegisterActive === 'login'}>
-                                            <form onSubmit={this.handleLoginSubmit}>
-                                                <div className='text-center mb-3'>
-                                                    <p>Sign in with:</p>
-                                                </div>
+                                <MDBTabsContent>
+                                    <MDBTabsPane show={loginRegisterActive === 'login'}>
+                                        <form onSubmit={this.handleLoginSubmit}>
+                                            <div className='text-center mb-3'>
+                                                <p>Sign in with:</p>
+                                            </div>
 
-                                                <MDBInput className='mb-4' type='email' inputRef={this.loginTxtEmail} label='Email address' />
-                                                <MDBInput className='mb-4' type='password' inputRef={this.loginTxtPassword} label='Password' />
+                                            <MDBInput className='mb-4' type='email' inputRef={this.loginTxtEmail} label='Email address' />
+                                            <MDBInput className='mb-4' type='password' inputRef={this.loginTxtPassword} label='Password' />
 
-                                                <MDBRow className='mb-4'>
-                                                    <MDBCol className='d-flex justify-content-center'>
-                                                        <a href='#' onClick={this.handleForgotPassword}>Forgot password?</a>
-                                                    </MDBCol>
-                                                </MDBRow>
+                                            <MDBRow className='mb-4'>
+                                                <MDBCol className='d-flex justify-content-center'>
+                                                    <a href='#' onClick={this.handleForgotPassword}>Forgot password?</a>
+                                                </MDBCol>
+                                            </MDBRow>
 
-                                                <MDBBtn type='submit' className='mb-4' block>
-                                                    Sign in
-                                                </MDBBtn>
+                                            <MDBBtn type='submit' className='mb-4' block>
+                                                Sign in
+                                            </MDBBtn>
 
-                                                <div className='text-center'>
-                                                    <p>
-                                                        Not a member? <a href='#' onClick={(e) => {
-                                                            e.preventDefault();
-                                                            this.handleLoginRegisterClick('register');
-                                                        }}>Register</a>
-                                                    </p>
-                                                </div>
-                                            </form>
-                                        </MDBTabsPane>
-                                        <MDBTabsPane show={loginRegisterActive === 'register'}>
-                                            <form onSubmit={this.handleRegisterSubmit}>
-                                                <div className='text-center mb-3'>
-                                                    <p>Sign up with:</p>
-                                                </div>
+                                            <div className='text-center'>
+                                                <p>
+                                                    Not a member? <a href='#' onClick={(e) => {
+                                                        e.preventDefault();
+                                                        this.handleLoginRegisterClick('register');
+                                                    }}>Register</a>
+                                                </p>
+                                            </div>
+                                        </form>
+                                    </MDBTabsPane>
+                                    <MDBTabsPane show={loginRegisterActive === 'register'}>
+                                        <form onSubmit={this.handleRegisterSubmit}>
+                                            <div className='text-center mb-3'>
+                                                <p>Sign up with:</p>
+                                            </div>
 
-                                                <MDBInput className='mb-4' inputRef={this.registerTxtName} label='Name' />
-                                                <MDBInput className='mb-4' type='email' inputRef={this.registerTxtEmail} label='Email Address' />
-                                                <MDBInput className='mb-4' type='password' inputRef={this.registerTxtPassword} label='Password' />
-                                                <MDBInput className='mb-4' type='password' inputRef={this.registerTxtPasswordRepeat} label='Repeat password' />
+                                            <MDBInput className='mb-4' inputRef={this.registerTxtName} label='Name' />
+                                            <MDBInput className='mb-4' type='email' inputRef={this.registerTxtEmail} label='Email Address' />
+                                            <MDBInput className='mb-4' type='password' inputRef={this.registerTxtPassword} label='Password' />
+                                            <MDBInput className='mb-4' type='password' inputRef={this.registerTxtPasswordRepeat} label='Repeat password' />
 
-                                                <MDBBtn type='submit' className='mb-4' block>
-                                                    Sign Up
-                                                </MDBBtn>
-                                            </form>
-                                        </MDBTabsPane>
-                                    </MDBTabsContent>
-                                </div>
-                            </MDBCol>
-                        </MDBRow>
-                    </MDBContainer>
+                                            <MDBBtn type='submit' className='mb-4' block>
+                                                Sign Up
+                                            </MDBBtn>
+                                        </form>
+                                    </MDBTabsPane>
+                                </MDBTabsContent>
+                            </div>
+                        </MDBCol>
+                    </MDBRow>
+                </MDBContainer>
 
-                    {/* Notification Snackbar Container */}
-                    <Snackbar open={notificationOpen} autoHideDuration={6000} onClose={this.closeNotification} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-                        <Alert onClose={this.closeNotification} severity={notificationSeverity} sx={{ width: '100%' }}>
-                            {notificationMessage}
-                        </Alert>
-                    </Snackbar>
+                {/* Notification Snackbar Container */}
+                <Snackbar open={notificationOpen} autoHideDuration={6000} onClose={this.closeNotification} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                    <Alert onClose={this.closeNotification} severity={notificationSeverity} sx={{ width: '100%' }}>
+                        {notificationMessage}
+                    </Alert>
+                </Snackbar>
+
+                <div>
+                    {body}
                 </div>
-            );
-        }
+            </div>
+        );
     }
 
 }
