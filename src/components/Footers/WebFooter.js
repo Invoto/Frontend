@@ -15,7 +15,7 @@ class WebFooter extends React.Component {
     return (
       <MDBFooter className='text-center' color='white' bgColor='dark'>
         <MDBContainer className='p-2'>
-          <section className='mb-4'>
+          <section className='my-4'>
             <a className='btn btn-outline-light btn-floating m-1' href='https://www.facebook.com/invoto' role='button' target="_balnk">
               <MDBIcon fab icon='facebook-f' />
             </a>
