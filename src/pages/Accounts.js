@@ -11,10 +11,15 @@ import {
     MDBTabsPane,
     MDBContainer,
 } from 'mdb-react-ui-kit';
+
+
 import { isLoginFormValid, isEmailValid } from "../helpers/validators/login";
 import { isRegisterFormValid } from "../helpers/validators/register";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+
+import "../assets/css/pages/accounts.css";
+import crestInvoto from "../assets/img/crestInvoto.png";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -132,11 +137,25 @@ class Accounts extends React.Component {
         let { loginRegisterActive, notificationOpen, notificationSeverity, notificationMessage } = this.state;
 
         return (
-            <div className='body'>
+            <div className='body' >
                 <MDBContainer>
                     <MDBRow>
-                        <MDBCol className='d-flex justify-content-center'>
-                            <div className='my-5'>
+                        <MDBCol size='md' md="5"className='col-example'style={{ backgroundColor: '#757575', color: "black" }}>
+                        <div className='my-5' >
+                            <img
+                                src={crestInvoto}
+                                height='100'
+                                alt=''
+                                loading='lazy'
+                            />
+                            <h2 className='title mb-3'>INVOTO</h2>
+                            <h5 className='mb-3'>WHERE AI MEETS BILLS</h5>
+                            <p>1000+ peoples have already joined with us and
+                            Welcome you all.</p>
+                            </div>
+                        </MDBCol>
+                        <MDBCol size='md' md="5" className='col-example'style={{ backgroundColor: '#9E9E9E',color: "black" }}>
+                            <div className='my-2'>
                                 <MDBTabs pills justify className='mb-3'>
                                     <MDBTabsItem>
                                         <MDBTabsLink
