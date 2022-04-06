@@ -1,14 +1,19 @@
 import React from 'react';
+import WebNotifierContext from '../contexts/WebNotifier';
 import {
     MDBContainer, MDBRow, MDBCol,
-    MDBCard, MDBCardBody, MDBCardTitle, MDBCardSubTitle, MDBCardText, MDBCardLink,
+    MDBCard, MDBCardBody, MDBCardTitle, MDBCardSubTitle, MDBCardText,
     MDBFile, MDBBtn,
-    MDBSpinner
 } from 'mdb-react-ui-kit';
+import axios from 'axios';
+import VolunteerUploadDialog from '../components/Dialogs/VolunteerUploadDialog';
+import Link from '@mui/material/Link';
 
 import "../assets/css/pages/volunteer.css";
 
 class Volunteer extends React.Component {
+
+    static contextType = WebNotifierContext;
 
     constructor(props) {
         super(props);
@@ -16,11 +21,19 @@ class Volunteer extends React.Component {
         // Defining the state for this component.
         this.state = {
             volFileImage: null,
+            volFile: null,
+
+            isUploadDialogOpen: false,
+            uploadDialogUploadingState: null,
+            uploadDialogStatusTitle: "",
+            uploadDialogStatusDesc: "",
         };
 
         this.divVolImgRender = React.createRef();
 
         this.handleImageChange = this.handleImageChange.bind(this);
+        this.handleImageSubmit = this.handleImageSubmit.bind(this);
+        this.handleUploadDialogClose = this.handleUploadDialogClose.bind(this);
     }
 
     _addStylesToVolRenderImage() {
@@ -33,10 +46,85 @@ class Volunteer extends React.Component {
 
     handleImageChange(e) {
         this.setState({
-            volFileImage: URL.createObjectURL(e.target.files[0])
+            volFile: e.target.files[0],
+            volFileImage: URL.createObjectURL(e.target.files[0]),
         });
 
         this._addStylesToVolRenderImage();
+    }
+
+    handleImageSubmit(e) {
+        if (this.state.volFile) {
+            this.setState({
+                uploadDialogUploadingState: "uploading",
+                uploadDialogStatusTitle: "Uploading",
+                uploadDialogStatusDesc: "Creating Request...",
+                isUploadDialogOpen: true,
+            }, () => {
+                const form = new FormData();
+                form.append("imageFile", this.state.volFile, this.state.volFile.name);
+
+                axios({
+                    method: "POST",
+                    baseURL: process.env.REACT_APP_BACKEND_URL,
+                    url: "/public/volunteer",
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    data: form,
+                    validateStatus: () => true,
+                }).then((resVol) => {
+                    let resVolData = resVol.data;
+                    if (resVolData.status) {
+                        this.setState({
+                            uploadDialogUploadingState: "success",
+                            uploadDialogStatusTitle: "Upload Successful",
+                            uploadDialogStatusDesc: (
+                                <span>
+                                    <Link href={resVolData.imageURL} underline="always" target="_blank">
+                                        Click here
+                                    </Link>
+                                    to view the uploaded image
+                                </span>
+                            ),
+                        });
+                    }
+                    else {
+                        this.setState({
+                            uploadDialogUploadingState: "failed",
+                            uploadDialogStatusTitle: "Upload Failed",
+                            uploadDialogStatusDesc: (
+                                <span>
+                                    {resVolData.message}
+                                </span>
+                            ),
+                        });
+                    }
+                }).catch((error) => {
+                    this.setState({
+                        uploadDialogUploadingState: "failed",
+                        uploadDialogStatusTitle: "Upload Failed",
+                        uploadDialogStatusDesc: (
+                            <span>
+                                {error.message}
+                            </span>
+                        ),
+                    });
+                });
+            });
+        }
+        else {
+            this.context.showNotification("error", "Please select an appropriate image.");
+        }
+    }
+
+    handleUploadDialogClose() {
+        this.setState({
+            isUploadDialogOpen: false,
+            uploadDialogUploadingState: null,
+            uploadDialogStatusTitle: "",
+            uploadDialogStatusDesc: "",
+        });
     }
 
     render() {
@@ -94,7 +182,7 @@ class Volunteer extends React.Component {
                                         {
                                             this.state.volFileImage ?
                                                 <div>
-                                                    <MDBBtn className='mt-4'>Submit</MDBBtn>
+                                                    <MDBBtn className='mt-4' onClick={this.handleImageSubmit}>Submit</MDBBtn>
                                                 </div>
                                                 :
                                                 <div></div>
@@ -105,6 +193,9 @@ class Volunteer extends React.Component {
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>
+
+                {/* Upload Dialog Content */}
+                <VolunteerUploadDialog open={this.state.isUploadDialogOpen} close={this.handleUploadDialogClose} uploadingState={this.state.uploadDialogUploadingState} statusTitle={this.state.uploadDialogStatusTitle} statusDesc={this.state.uploadDialogStatusDesc} />
             </div>
         );
     }
