@@ -40,8 +40,6 @@ class Accounts extends React.Component {
         this.registerTxtPassword = React.createRef();
         this.registerTxtPasswordRepeat = React.createRef();
 
-        this.context.showNotification = this.context.showNotification.bind(this);
-        this.closeNotification = this.closeNotification.bind(this);
         this.handleLoginRegisterClick = this.handleLoginRegisterClick.bind(this);
         this.handleForgotPassword = this.handleForgotPassword.bind(this);
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
