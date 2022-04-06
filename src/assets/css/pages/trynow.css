@@ -1,4 +1,3 @@
-
 .trynow-container {
     margin-top: 2%;
     margin-bottom: 2%;
@@ -19,4 +18,9 @@
 
 .outputs {
     min-height: 90px;
+}
+
+.output-body {
+    max-height: 700px;
+    overflow-y: scroll;
 }

@@ -13,17 +13,14 @@ import {
 } from 'mdb-react-ui-kit';
 import { isLoginFormValid, isEmailValid } from "../helpers/validators/login";
 import { isRegisterFormValid } from "../helpers/validators/register";
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import WebNotifierContext from '../contexts/WebNotifier';
 import { assessTokenValidity } from "../helpers/auth";
 import { Navigate } from "react-router-dom";
 const axios = require('axios').default;
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
 class Accounts extends React.Component {
+
+    static contextType = WebNotifierContext;
 
     constructor(props) {
         super(props);
@@ -32,9 +29,6 @@ class Accounts extends React.Component {
         this.state = {
             body: null,
             loginRegisterActive: "login",
-            notificationOpen: false,
-            notificationSeverity: "success",
-            notificationMessage: "",
             token: this._getUserToken(),
         };
 
@@ -46,7 +40,7 @@ class Accounts extends React.Component {
         this.registerTxtPassword = React.createRef();
         this.registerTxtPasswordRepeat = React.createRef();
 
-        this.showNotification = this.showNotification.bind(this);
+        this.context.showNotification = this.context.showNotification.bind(this);
         this.closeNotification = this.closeNotification.bind(this);
         this.handleLoginRegisterClick = this.handleLoginRegisterClick.bind(this);
         this.handleForgotPassword = this.handleForgotPassword.bind(this);
@@ -76,29 +70,6 @@ class Accounts extends React.Component {
         }, () => { });
     }
 
-    showNotification(severity, message) {
-        this.setState({
-            notificationSeverity: severity,
-            notificationMessage: message,
-            notificationOpen: true,
-        });
-    }
-
-    closeNotification(event, reason) {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        this.setState({
-            notificationOpen: false,
-        });
-
-        this.setState({
-            notificationSeverity: "success",
-            notificationMessage: "",
-        });
-    };
-
     handleLoginRegisterClick(mode) {
         this.setState({
             loginRegisterActive: mode,
@@ -111,11 +82,11 @@ class Accounts extends React.Component {
         let vdResults = isEmailValid(this.loginTxtEmail.current.value);
 
         if (!vdResults[0]) {
-            this.showNotification("error", vdResults[1]);
+            this.context.showNotification("error", vdResults[1]);
             return false;
         }
         else {
-            this.showNotification("info", "Please wait...");
+            this.context.showNotification("info", "Please wait...");
             const params = new URLSearchParams();
             params.append("email", this.loginTxtEmail.current.value);
 
@@ -129,16 +100,16 @@ class Accounts extends React.Component {
                 validateStatus: () => true,
             }).then((res) => {
                 if (res.data.status) {
-                    this.closeNotification();
-                    this.showNotification("success", "Successful request. Check your emails.");
+                    this.context.closeNotification();
+                    this.context.showNotification("success", "Successful request. Check your emails.");
                 }
                 else {
-                    this.closeNotification();
-                    this.showNotification("error", res.data.message);
+                    this.context.closeNotification();
+                    this.context.showNotification("error", res.data.message);
                 }
             }).catch((error) => {
-                this.closeNotification();
-                this.showNotification("error", error);
+                this.context.closeNotification();
+                this.context.showNotification("error", error);
             });
         }
     }
@@ -152,11 +123,11 @@ class Accounts extends React.Component {
         );
 
         if (!vdResults[0]) {
-            this.showNotification("error", vdResults[1]);
+            this.context.showNotification("error", vdResults[1]);
             return false;
         }
         else {
-            this.showNotification("info", "Please wait...");
+            this.context.showNotification("info", "Please wait...");
 
             const params = new URLSearchParams();
             params.append("email", this.loginTxtEmail.current.value);
@@ -172,10 +143,10 @@ class Accounts extends React.Component {
                 validateStatus: () => true,
             }).then((res) => {
                 if (res.data.status) {
-                    this.closeNotification();
-                    this.showNotification("success", "Successful. Redirecting...");
+                    this.context.closeNotification();
+                    this.context.showNotification("success", "Successful. Redirecting...");
                     setTimeout(() => {
-                        this.closeNotification();
+                        this.context.closeNotification();
                         this._setUserToken(res.data.token);
                         this.setState({
                             body: <Navigate replace to="/dashboard" />,
@@ -183,12 +154,12 @@ class Accounts extends React.Component {
                     }, 1000);
                 }
                 else {
-                    this.closeNotification();
-                    this.showNotification("error", res.data.message);
+                    this.context.closeNotification();
+                    this.context.showNotification("error", res.data.message);
                 }
             }).catch((error) => {
-                this.closeNotification();
-                this.showNotification("error", error);
+                this.context.closeNotification();
+                this.context.showNotification("error", error);
             });
         }
     }
@@ -204,11 +175,11 @@ class Accounts extends React.Component {
         );
 
         if (!vdResults[0]) {
-            this.showNotification("error", vdResults[1]);
+            this.context.showNotification("error", vdResults[1]);
             return false;
         }
         else {
-            this.showNotification("info", "Please wait...");
+            this.context.showNotification("info", "Please wait...");
 
             const params = new URLSearchParams();
             params.append("name", this.registerTxtName.current.value);
@@ -218,7 +189,8 @@ class Accounts extends React.Component {
 
             axios({
                 method: "POST",
-                url: process.env.REACT_APP_BACKEND_URL + "/auth/register",
+                baseURL: process.env.REACT_APP_BACKEND_URL,
+                url: "/auth/register",
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
@@ -226,8 +198,8 @@ class Accounts extends React.Component {
                 validateStatus: () => true,
             }).then((res) => {
                 if (res.data.status) {
-                    this.closeNotification();
-                    this.showNotification("success", "Successful registration. Please login.");
+                    this.context.closeNotification();
+                    this.context.showNotification("success", "Successful registration. Please login.");
 
                     // Resetting the text boxes in the registration form.
                     this.registerTxtName.current.value = "";
@@ -239,12 +211,12 @@ class Accounts extends React.Component {
                     this.handleLoginRegisterClick('login');
                 }
                 else {
-                    this.closeNotification();
-                    this.showNotification("error", res.data.message);
+                    this.context.closeNotification();
+                    this.context.showNotification("error", res.data.message);
                 }
             }).catch((error) => {
-                this.closeNotification();
-                this.showNotification("error", error);
+                this.context.closeNotification();
+                this.context.showNotification("error", error);
             });
         }
     }
@@ -262,7 +234,7 @@ class Accounts extends React.Component {
     }
 
     render() {
-        let { body, loginRegisterActive, notificationOpen, notificationSeverity, notificationMessage } = this.state;
+        let { body, loginRegisterActive } = this.state;
 
         return (
             <div className='body'>
@@ -340,13 +312,6 @@ class Accounts extends React.Component {
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>
-
-                {/* Notification Snackbar Container */}
-                <Snackbar open={notificationOpen} autoHideDuration={6000} onClose={this.closeNotification} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-                    <Alert onClose={this.closeNotification} severity={notificationSeverity} sx={{ width: '100%' }}>
-                        {notificationMessage}
-                    </Alert>
-                </Snackbar>
 
                 <div>
                     {body}
