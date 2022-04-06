@@ -147,7 +147,6 @@ function InvotoDashboard(props) {
             </div>
         </div>
     );
-    return body;
 }
 
 export default InvotoDashboard;

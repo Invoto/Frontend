@@ -1,14 +1,19 @@
 import React from 'react';
 import {
     MDBContainer, MDBRow, MDBCol,
-    MDBCard, MDBCardBody, MDBCardTitle, MDBCardSubTitle, MDBCardText, MDBCardLink,
+    MDBCard, MDBCardBody, MDBCardTitle, MDBCardSubTitle, MDBCardText,
     MDBFile, MDBBtn,
     MDBSpinner
 } from 'mdb-react-ui-kit';
+import WebNotifierContext from '../contexts/WebNotifier';
+import axios from 'axios';
+import ExtractionProgressList from "../components/Lists/ExtractionProgressList";
 
 import '../assets/css/pages/trynow.css';
 
 class TryNow extends React.Component {
+
+    static contextType = WebNotifierContext;
 
     constructor(props) {
         super(props);
@@ -16,12 +21,19 @@ class TryNow extends React.Component {
         // Defining the state for this component.
         this.state = {
             tryFileImage: null,
+            tryImage: null,
+
+            extractionID: null,
+            extractionOutputs: [],
         };
 
         this.divImgRender = React.createRef();
         this.divImgWaiter = React.createRef();
 
+        this.timerTryNow = null;
+
         this.handleImageChange = this.handleImageChange.bind(this);
+        this.handleImageSubmit = this.handleImageSubmit.bind(this);
     }
 
     _addStylesToRenderImage() {
@@ -34,10 +46,76 @@ class TryNow extends React.Component {
 
     handleImageChange(e) {
         this.setState({
-            tryFileImage: URL.createObjectURL(e.target.files[0])
+            tryFileImage: e.target.files[0],
+            tryImage: URL.createObjectURL(e.target.files[0]),
         });
 
         this._addStylesToRenderImage();
+    }
+
+    handleImageSubmit(e) {
+        if (this.state.tryFileImage) {
+            const form = new FormData();
+            form.append("imageFile", this.state.tryFileImage, this.state.tryFileImage.name);
+
+            axios({
+                method: "POST",
+                baseURL: process.env.REACT_APP_BACKEND_URL,
+                url: "/public/try",
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                data: form,
+                validateStatus: () => true,
+            }).then((res) => {
+                if (res.data.status) {
+                    this.context.showNotification("success", "Successfully received.");
+                    this.setState({
+                        extractionID: res.data.extraction_id,
+                    });
+
+                    this.timerTryNow = setInterval(() => {
+                        axios({
+                            method: "GET",
+                            baseURL: process.env.REACT_APP_BACKEND_URL,
+                            url: "/extractions/" + res.data.extraction_id,
+                            validateStatus: () => true,
+                        }).then((resExtraction) => {
+                            let resExtractionData = resExtraction.data;
+                            if (resExtractionData.status) {
+                                this.setState({
+                                    extractionOutputs: resExtractionData.outputs,
+                                });
+
+                                if (resExtractionData.job_status !== "QUEUED" && resExtractionData.job_status !== "ONGOING") {
+                                    clearInterval(this.timerTryNow);
+                                }
+
+                                if (resExtractionData.job_status === "COMPLETED") {
+                                    this.context.showNotification("success", "Extraction Completed.");
+                                }
+                                else if (resExtractionData.job_status === "FAILED") {
+                                    this.context.showNotification("warning", "Extraction Failed.");
+                                }
+                            }
+                            else {
+                                this.context.showNotification("error", "Request Failed.");
+                            }
+                        }).catch((error) => {
+                            this.context.showNotification("error", error.message);
+                        });
+                    }, 1000);
+                }
+                else {
+                    this.context.showNotification("error", res.data.message);
+                }
+            }).catch((err) => {
+                this.context.showNotification("error", err.message);
+            });
+        }
+        else {
+            this.context.showNotification("error", "Please select an appropriate image.");
+        }
     }
 
     render() {
@@ -57,7 +135,7 @@ class TryNow extends React.Component {
                     <MDBRow>
                         <MDBCol md='6'>
                             <MDBCard color='primary'>
-                                <MDBCardBody>
+                                <MDBCardBody className='output-body overflow-auto'>
                                     <MDBCardTitle><h2>Upload Invoice Image</h2></MDBCardTitle>
                                     <MDBCardSubTitle className='pt-3'>Please upload a scanned image of any invoice.</MDBCardSubTitle>
 
@@ -66,13 +144,13 @@ class TryNow extends React.Component {
                                     </div>
 
                                     <div ref={this.divImgRender} className='render-image'>
-                                        <img src={this.state.tryFileImage} />
+                                        <img src={this.state.tryImage} />
                                     </div>
 
                                     {
                                         this.state.tryFileImage ?
                                             <div>
-                                                <MDBBtn className='mt-4'>Submit</MDBBtn>
+                                                <MDBBtn className='mt-4' onClick={this.handleImageSubmit}>Submit</MDBBtn>
                                             </div>
                                             :
                                             <div></div>
@@ -83,18 +161,23 @@ class TryNow extends React.Component {
 
                         <MDBCol md='6'>
                             <MDBCard color='primary'>
-                                <MDBCardBody>
+                                <MDBCardBody className='output-body overflow-auto'>
                                     <MDBCardTitle><h2>Results</h2></MDBCardTitle>
                                     <MDBCardText>Submit an image of an invoice to start processing.</MDBCardText>
 
-                                    <div ref={this.divImgWaiter} className='d-flex align-items-center'>
-                                        <MDBSpinner grow className='float-start me-4'>
-                                            <span className='visually-hidden'>Loading...</span>
-                                        </MDBSpinner>
-                                        <MDBCardText>Waiting for an Image...</MDBCardText>
-                                    </div>
+                                    {
+                                        !this.state.extractionID ?
+                                            <div ref={this.divImgWaiter} className='d-flex align-items-center'>
+                                                <MDBSpinner grow className='float-start me-4'>
+                                                    <span className='visually-hidden'>Loading...</span>
+                                                </MDBSpinner>
+                                                <MDBCardText>Waiting for an Image...</MDBCardText>
+                                            </div>
+                                            :
+                                            <div></div>
+                                    }
 
-                                    <div id='frmTryNowOutputs' className='outputs'></div>
+                                    <ExtractionProgressList sx={{ mt: 1 }} itemsList={this.state.extractionOutputs} />
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
