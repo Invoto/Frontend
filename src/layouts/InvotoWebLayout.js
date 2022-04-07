@@ -7,6 +7,8 @@ import WebNotifier from "../components/Notifiers/WebNotifier";
 // Material Design
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
+import WebFooter from "../components/Footers/WebFooter";
+
 function InvotoWeb(props) {
 
     const [notificationSeverity, setNotificiationSeverity] = React.useState("success");
@@ -45,6 +47,8 @@ function InvotoWeb(props) {
             </WebNotifierProvider>
 
             <WebNotifier notificationOpen={notificationOpen} autoHideDuration={6000} closeNotification={closeNotification} notificationSeverity={notificationSeverity} notificationMessage={notificationMessage} />
+
+            <WebFooter />
         </div>
     );
 }

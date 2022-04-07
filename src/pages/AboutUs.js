@@ -148,7 +148,7 @@ class AboutUs extends React.Component {
               </div>
             </MDBCol>
           </MDBRow>
-
+          
           <MDBRow className="mt-5">
             <MDBCol size="md-7">
               <MDBCard shadow='0' border='light' background='white' className='mb-3'>
