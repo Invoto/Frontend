@@ -19,6 +19,7 @@ import { routesConfig, routesDashboard } from '../config/routes';
 import useToken from '../components/Dashboard/useToken';
 import { Navigate } from "react-router-dom";
 import { assessTokenValidity } from "../helpers/auth";
+import WebNotifier from '../components/Notifiers/WebNotifier';
 
 const drawerWidth = 240;
 
@@ -51,12 +52,35 @@ function InvotoDashboard(props) {
         [mode],
     );
 
+    const [notificationSeverity, setNotificiationSeverity] = React.useState("success");
+    const [notificationMessage, setNotificationMessage] = React.useState("");
+    const [notificationOpen, setNotificationOpen] = React.useState(false);
+
+    const showNotification = (severity, message) => {
+        setNotificiationSeverity(severity);
+        setNotificationMessage(message);
+        setNotificationOpen(true);
+    };
+
+    const closeNotification = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setNotificationOpen(false);
+        setNotificiationSeverity("success");
+        setNotificationMessage("");
+    };
+
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
 
     const contextElements = {
         setPageTitle: setPageTitle,
+        userToken: token,
+        showNotification: showNotification,
+        closeNotification: closeNotification,
     };
 
     const handleLogout = () => {
@@ -137,6 +161,8 @@ function InvotoDashboard(props) {
                                 <Toolbar />
                                 <Outlet />
                             </Box>
+
+                            <WebNotifier notificationOpen={notificationOpen} autoHideDuration={6000} closeNotification={closeNotification} notificationSeverity={notificationSeverity} notificationMessage={notificationMessage} />
                         </Box>
                     </ThemeProvider>
                 </ColorModeContext.Provider>
