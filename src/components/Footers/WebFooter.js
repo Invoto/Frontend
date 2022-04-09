@@ -10,7 +10,35 @@ import {
 } from 'mdb-react-ui-kit';
 import "./webfooter.css";
 
+import WebNotifierContext from '../../contexts/WebNotifier';
+import { subscribeToMailingList } from "../../helpers/common";
+
 class WebFooter extends React.Component {
+
+  static contextType = WebNotifierContext;
+
+  constructor(props) {
+    super(props);
+
+    this.txtFooterSubscribeEmail = React.createRef();
+
+    this.handleFooterSubscribeSubmit = this.handleFooterSubscribeSubmit.bind(this);
+  }
+
+  handleFooterSubscribeSubmit(e) {
+    e.preventDefault();
+
+    this.context.showNotification("info", "Please wait...");
+    subscribeToMailingList(this.txtFooterSubscribeEmail.current.value, () => {
+      this.txtFooterSubscribeEmail.current.value = "";
+      this.context.closeNotification();
+      this.context.showNotification("success", "Successfully subscribed!");
+    }, (error) => {
+      this.context.closeNotification();
+      this.context.showNotification("error", error.message);
+    });
+  }
+
   render() {
     return (
       <MDBFooter className='text-center' color='white' bgColor='dark'>
@@ -19,7 +47,7 @@ class WebFooter extends React.Component {
             <a className='btn btn-outline-light btn-floating m-1' href='https://www.facebook.com/invoto' role='button' target="_balnk">
               <MDBIcon fab icon='facebook-f' />
             </a>
-  
+
             <a className='btn btn-outline-light btn-floating m-1' href='https://twitter.com/invoto' role='button' target="_balnk">
               <MDBIcon fab icon='twitter' />
             </a>
@@ -27,29 +55,29 @@ class WebFooter extends React.Component {
             <a className='btn btn-outline-light btn-floating m-1' href='https://www.instagram.com/invoto' role='button' target="_balnk">
               <MDBIcon fab icon='instagram' />
             </a>
-  
+
             <a className='btn btn-outline-light btn-floating m-1' href='https://www.linkedin.com/in/invoto/' role='button' target="_balnk">
               <MDBIcon fab icon='linkedin-in' />
             </a>
-  
+
             <a className='btn btn-outline-light btn-floating m-1' href='https://github.com/invoto' role='button' target="_balnk">
               <MDBIcon fab icon='github' />
             </a>
           </section>
-  
+
           <section className='subscribe'>
-            <form action=''>
+            <form onSubmit={this.handleFooterSubscribeSubmit}>
               <div className='row d-flex justify-content-center'>
                 <div className='col-auto'>
                   <p className='pt-2'>
                     <strong>Sign up for our newsletter</strong>
                   </p>
                 </div>
-  
+
                 <MDBCol md='5' start='12'>
-                  <MDBInput contrast type='frmSubscribeTxtEmail' label='Email address' className='mb-4' />
+                  <MDBInput contrast type='frmSubscribeTxtEmail' inputRef={this.txtFooterSubscribeEmail} label='Email address' className='mb-4' />
                 </MDBCol>
-  
+
                 <div className='col-auto'>
                   <MDBBtn outline color='light' type='submit' className='mb-4'>
                     Subscribe
@@ -58,7 +86,7 @@ class WebFooter extends React.Component {
               </div>
             </form>
           </section>
-  
+
           <section className='mb-4'>
             <p>
               Your company may not be in the software business, but eventually, a software company will be in your business.
@@ -70,32 +98,32 @@ class WebFooter extends React.Component {
           <MDBRow>
             <MDBCol size='md' className=' mb-4 col-example'>
               <a href='/' className='text-white'>
-                    Home
+                Home
               </a>
             </MDBCol>
             <MDBCol size='md' className='col-example'>
               <a href='about-us' className='text-white'>
-                    About Us
+                About Us
               </a>
             </MDBCol>
             <MDBCol size='md' className='col-example'>
               <a href='try-now' className='text-white'>
-                    Try It Now
+                Try It Now
               </a>
             </MDBCol>
             <MDBCol size='md' className='col-example'>
               <a href='volunteer' className='text-white'>
-                    Volunteer
+                Volunteer
               </a>
             </MDBCol>
             <MDBCol size='md' className='col-example'>
               <a href='api-docs' className='text-white'>
-                    API Documentation
+                API Documentation
               </a>
             </MDBCol>
           </MDBRow>
         </MDBContainer>
-  
+
         <div className='text-center px-3 pt-3' style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
           © 2022 Copyright:
         </div>

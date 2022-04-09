@@ -1,10 +1,12 @@
 import React from "react";
 import {
   MDBContainer, MDBRow, MDBCol,
-  MDBCard, MDBCardHeader, MDBCardOverlay, MDBCardImage, MDBCardBody, MDBCardTitle, MDBCardText, MDBCardLink,
+  MDBCard, MDBCardHeader, MDBCardBody, MDBCardTitle, MDBCardText,
   MDBIcon,
-  MDBInput, MDBCheckbox, MDBBtn,
+  MDBInput, MDBBtn,
 } from "mdb-react-ui-kit";
+import WebNotifierContext from '../contexts/WebNotifier';
+import { subscribeToMailingList } from "../helpers/common";
 import Chip from '@mui/material/Chip';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import "../assets/css/pages/aboutus.css";
@@ -14,6 +16,30 @@ import ImageGimhani from "../assets/img/gimhani.jpg";
 import ImageSubscribeRight from "../assets/img/aboutus-subscribe-right.png";
 
 class AboutUs extends React.Component {
+
+  static contextType = WebNotifierContext;
+
+  constructor(props) {
+    super(props);
+
+    this.txtSubscribeEmail = React.createRef();
+
+    this.handleSubscribeSubmit = this.handleSubscribeSubmit.bind(this);
+  }
+
+  handleSubscribeSubmit(e) {
+    e.preventDefault();
+
+    this.context.showNotification("info", "Please wait...");
+    subscribeToMailingList(this.txtSubscribeEmail.current.value, () => {
+      this.txtSubscribeEmail.current.value = "";
+      this.context.closeNotification();
+      this.context.showNotification("success", "Successfully subscribed!");
+    }, (error) => {
+      this.context.closeNotification();
+      this.context.showNotification("error", error.message);
+    });
+  }
 
   render() {
     return (
@@ -148,7 +174,7 @@ class AboutUs extends React.Component {
               </div>
             </MDBCol>
           </MDBRow>
-          
+
           <MDBRow className="mt-5">
             <MDBCol size="md-7">
               <MDBCard shadow='0' border='light' background='white' className='mb-3'>
@@ -160,11 +186,11 @@ class AboutUs extends React.Component {
 
                   <form>
                     <div className="w-75 pt-3">
-                      <MDBInput className='mb-4 w-75' type='frmSubscribeTxtEmail' id='form5Example2' label='Email Address' />
+                      <MDBInput className='mb-4 w-75' type='frmSubscribeTxtEmail' inputRef={this.txtSubscribeEmail} id='form5Example2' label='Email Address' />
                     </div>
 
                     <div className="w-25">
-                      <MDBBtn type='submit'>
+                      <MDBBtn type='submit' onClick={this.handleSubscribeSubmit}>
                         Subscribe
                       </MDBBtn>
                     </div>

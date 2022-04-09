@@ -48,7 +48,9 @@ function InvotoWeb(props) {
 
             <WebNotifier notificationOpen={notificationOpen} autoHideDuration={6000} closeNotification={closeNotification} notificationSeverity={notificationSeverity} notificationMessage={notificationMessage} />
 
-            <WebFooter />
+            <WebNotifierProvider value={contextWebNotifier}>
+                <WebFooter />
+            </WebNotifierProvider>
         </div>
     );
 }
