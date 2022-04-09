@@ -45,7 +45,7 @@ class AboutUs extends React.Component {
     return (
       <div className="body">
         {/* Cover Image Section */}
-        <div className='p-5 text-center bg-image intro-content'>
+        <div className='p-5 text-center bg-image intro-content-aboutus'>
           <div className='mask' style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
             <div className='d-flex justify-content-center align-items-center h-100'>
               <div className='text-white'>

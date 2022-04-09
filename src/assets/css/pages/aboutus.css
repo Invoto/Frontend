@@ -1,4 +1,3 @@
-
 .col-example {
   margin: auto;
   /*background-color:'rgba(0, 0, 0, 0.7)';*/
@@ -13,7 +12,7 @@
   color: white;
 }
 
-.intro-content {
+.intro-content-aboutus {
   background-image: url("../../img/aboutusbg.jpg");
   background-size: cover;
   min-height: 368px;
@@ -33,7 +32,8 @@
 a {
   display: block;
   color: black;
-  text-decoration: none; /* no underline */
+  text-decoration: none;
+  /* no underline */
 }
 
 .expertise-list ul {
