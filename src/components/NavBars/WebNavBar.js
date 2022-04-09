@@ -52,7 +52,7 @@ class WebNavBar extends React.Component {
                                             return (
                                                 <MDBNavbarItem key={key} className="my-4">
                                                     <MDBNavbarLink href={entry.path}>
-                                                        <MDBBtn color="secondary" className='me-2' type='button'>
+                                                        <MDBBtn color="primary" className='me-2' type='button'>
                                                             {entry.name}
                                                         </MDBBtn>
                                                     </MDBNavbarLink>
