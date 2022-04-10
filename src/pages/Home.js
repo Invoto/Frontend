@@ -187,7 +187,7 @@ class Home extends React.Component {
             {/* API Guidelines Section */}
             <div className="d-flex justify-content-center w-75 mx-auto mt-2 py-3 px-2" style={{ height: "auto" }}>
               <MDBCard background='dark' className='text-white'>
-                <MDBCardImage overlay className='' src={ImageDev} alt='...' />
+                <MDBCardImage overlay style={{ minHeight: "550px" }} src={ImageDev} alt='...' />
                 <MDBCardOverlay>
                   <MDBCardTitle tag="h1">Built by Developers</MDBCardTitle>
                   <MDBCardText>
