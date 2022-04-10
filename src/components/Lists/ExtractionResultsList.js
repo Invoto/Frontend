@@ -28,7 +28,7 @@ class ExtractionResultsList extends React.Component {
                         {
                             Object.entries(this.props.results).map(([key, value]) => {
                                 if (key === "status" || key === "output_type") {
-                                    return <div></div>;
+                                    return <div key={key}></div>;
                                 }
                                 else {
                                     return (
