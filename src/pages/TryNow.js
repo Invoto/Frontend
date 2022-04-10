@@ -82,22 +82,27 @@ class TryNow extends React.Component {
                             method: "GET",
                             baseURL: process.env.REACT_APP_BACKEND_URL,
                             url: "/extractions/" + res.data.extraction_id,
+                            params: {
+                                reqOutputs: true,
+                                usageType: "TRYNOW",
+                            },
                             validateStatus: () => true,
                         }).then((resExtraction) => {
                             let resExtractionData = resExtraction.data;
-                            if (resExtractionData.status) {
+                            if (resExtractionData.status && resExtractionData.extractions.length > 0) {
+                                let extraction = resExtractionData.extractions[0];
                                 this.setState({
-                                    extractionOutputs: resExtractionData.outputs,
+                                    extractionOutputs: extraction.outputs,
                                 });
 
-                                if (resExtractionData.job_status !== "QUEUED" && resExtractionData.job_status !== "ONGOING") {
+                                if (extraction.jobStatus !== "QUEUED" && extraction.jobStatus !== "ONGOING") {
                                     clearInterval(this.timerTryNow);
                                 }
 
-                                if (resExtractionData.job_status === "COMPLETED") {
+                                if (extraction.jobStatus === "COMPLETED") {
                                     this.context.showNotification("success", "Extraction Completed.");
                                 }
-                                else if (resExtractionData.job_status === "FAILED") {
+                                else if (extraction.jobStatus === "FAILED") {
                                     this.context.showNotification("warning", "Extraction Failed.");
                                 }
                             }
@@ -105,6 +110,7 @@ class TryNow extends React.Component {
                                 this.context.showNotification("error", "Request Failed.");
                             }
                         }).catch((error) => {
+                            console.log(error);
                             this.context.showNotification("error", error.message);
                         });
                     }, 1000);

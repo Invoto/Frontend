@@ -1,6 +1,10 @@
 import React from 'react';
 import DashboardContext from "../../contexts/Dashboard";
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -17,6 +21,7 @@ class DashboardDeveloper extends React.Component {
         super(props);
 
         this.state = {
+            tabValue: "overview",
             userAPIKeyFetchState: true,
             userAPIKey: "",
         };
@@ -63,51 +68,71 @@ class DashboardDeveloper extends React.Component {
 
     render() {
         return (
-            <div>
-                <Box>
-                    <Paper elevation={1} className='my-2'>
-                        <Typography variant="h4" className='p-4'>
-                            What is this about?
-                        </Typography>
+            <Box sx={{ width: '100%', typography: 'body1' }}>
+                <TabContext value={this.state.tabValue}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <TabList onChange={(event, newTabValue) => {
+                            this.setState({
+                                tabValue: newTabValue,
+                            });
+                        }} aria-label="lab API tabs example">
+                            <Tab label="Overview" value="overview" />
+                            <Tab label="Extractions" value="extractions" />
+                            <Tab label="Quota" value="quota" />
+                        </TabList>
+                    </Box>
 
-                        <Typography variant="body1" className='px-4 pb-4' gutterBottom>
-                            Invoto allows developers to use the API for their applications. Invoto is presented to developers in the form of a REST API where they can send requests to our endpoints and perform extractions programmatically. Your requests have to be authenticated with the API keys and you must have enough quota left in your developer plan. Happy hacking for devs!
-                        </Typography>
-                    </Paper>
-
-                    <Grid
-                        container
-                        spacing={0}
-                        direction="column"
-                        alignItems="center"
-                        justify="center"
-                        style={{ minHeight: '100vh' }}
-                    >
-                        <Grid item xs={4}>
-                            <Card sx={{ minWidth: 475 }} className='my-4'>
-                                <CardContent>
-                                    <Typography variant="h5" component="div">
-                                        Your API Key
-                                    </Typography>
-                                    <Typography sx={{ mb: 1.5 }} color="text.secondary" className='py-2'>
-                                        Please keep this a secret!
+                    <TabPanel value="overview">
+                        <div>
+                            <Box>
+                                <Paper elevation={1} className='my-2'>
+                                    <Typography variant="h4" className='p-4'>
+                                        What is this about?
                                     </Typography>
 
-                                    <TextField
-                                        value={this.state.userAPIKey}
-                                        disabled={!this.state.userAPIKeyFetchState}
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                        variant="standard"
-                                        sx={{ minWidth: 425 }}
-                                    />
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    </Grid>
-                </Box>
-            </div>
+                                    <Typography variant="body1" className='px-4 pb-4' gutterBottom>
+                                        Invoto allows developers to use the API for their applications. Invoto is presented to developers in the form of a REST API where they can send requests to our endpoints and perform extractions programmatically. Your requests have to be authenticated with the API keys and you must have enough quota left in your developer plan. Happy hacking for devs!
+                                    </Typography>
+                                </Paper>
+
+                                <Grid
+                                    container
+                                    spacing={0}
+                                    direction="column"
+                                    alignItems="center"
+                                    justify="center"
+                                    style={{ minHeight: '100vh' }}
+                                >
+                                    <Grid item xs={4}>
+                                        <Card sx={{ minWidth: 475 }} className='my-4'>
+                                            <CardContent>
+                                                <Typography variant="h5" component="div">
+                                                    Your API Key
+                                                </Typography>
+                                                <Typography sx={{ mb: 1.5 }} color="text.secondary" className='py-2'>
+                                                    Please keep this a secret!
+                                                </Typography>
+
+                                                <TextField
+                                                    value={this.state.userAPIKey}
+                                                    disabled={!this.state.userAPIKeyFetchState}
+                                                    InputProps={{
+                                                        readOnly: true,
+                                                    }}
+                                                    variant="standard"
+                                                    sx={{ minWidth: 425 }}
+                                                />
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </div>
+                    </TabPanel>
+                    <TabPanel value="extractions">Item Two</TabPanel>
+                    <TabPanel value="quota">Item Three</TabPanel>
+                </TabContext>
+            </Box>
         );
     }
 
