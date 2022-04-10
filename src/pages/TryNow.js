@@ -55,6 +55,8 @@ class TryNow extends React.Component {
 
     handleImageSubmit(e) {
         if (this.state.tryFileImage) {
+            this.context.showNotification("info", "Please wait...");
+
             const form = new FormData();
             form.append("imageFile", this.state.tryFileImage, this.state.tryFileImage.name);
 
@@ -69,6 +71,7 @@ class TryNow extends React.Component {
                 validateStatus: () => true,
             }).then((res) => {
                 if (res.data.status) {
+                    this.context.closeNotification();
                     this.context.showNotification("success", "Successfully received.");
                     this.setState({
                         extractionID: res.data.extraction_id,
@@ -107,9 +110,11 @@ class TryNow extends React.Component {
                     }, 1000);
                 }
                 else {
+                    this.context.closeNotification();
                     this.context.showNotification("error", res.data.message);
                 }
             }).catch((err) => {
+                this.context.closeNotification();
                 this.context.showNotification("error", err.message);
             });
         }
