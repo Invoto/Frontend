@@ -147,16 +147,12 @@ class Volunteer extends React.Component {
                     <MDBRow>
                         <MDBCard>
                             <MDBCardBody>
-                                <MDBCardTitle className='mt-1 mb-3'><h2 className='text-center fw-bold'>What is Volunteering?</h2></MDBCardTitle>
-                                <MDBCardText>
-                                    <p className='fs-5 volunteer-desc'>
-                                        Invoto depends on a deep learning model that we've crafted using thousands of image files of invoices. Although this provides the best performance it could at the moment, you can contribute to make it even better. How? You can provide us with the scanned copies of invoices that you have as images and we will use them to enhance our model regularly. All you have to do is capture a clear 'document-type' photo of your invoice or scan it using a standard document scanner and upload it below. That's it. Not much of a hustle huh?
-                                    </p>
+                                <MDBCardTitle tag="h2" className='mt-1 mb-3 text-center fw-bold'>What is Volunteering?</MDBCardTitle>
+                                <MDBCardText className='fs-5 volunteer-desc'>
+                                    Invoto depends on a deep learning model that we've crafted using thousands of image files of invoices. Although this provides the best performance it could at the moment, you can contribute to make it even better. How? You can provide us with the scanned copies of invoices that you have as images and we will use them to enhance our model regularly. All you have to do is capture a clear 'document-type' photo of your invoice or scan it using a standard document scanner and upload it below. That's it. Not much of a hustle huh?
                                 </MDBCardText>
-                                <MDBCardText>
-                                    <p className='fs-5 volunteer-desc'>
-                                        Furthermore, if you are interested in contributing regularly, you can <a href='accounts'>create an account</a> with us.
-                                    </p>
+                                <MDBCardText className='fs-5 volunteer-desc'>
+                                    Furthermore, if you are interested in contributing regularly, you can <a href='accounts'>create an account</a> with us.
                                 </MDBCardText>
                             </MDBCardBody>
                         </MDBCard>
@@ -167,7 +163,7 @@ class Volunteer extends React.Component {
                         <MDBCol md='12' className='d-flex justify-content-center'>
                             <MDBCard color='primary'>
                                 <MDBCardBody>
-                                    <MDBCardTitle><h2 className='text-center fw-bold'>Upload Invoice Image - Contribution</h2></MDBCardTitle>
+                                    <MDBCardTitle tag="h2" className="text-center fw-bold">Upload Invoice Image - Contribution</MDBCardTitle>
                                     <MDBCardSubTitle className='pt-3'>Please upload a scanned image of any invoice to contribute.</MDBCardSubTitle>
 
                                     <MDBCol md='5'>

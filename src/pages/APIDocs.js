@@ -58,7 +58,7 @@ class APIDocs extends React.Component {
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
-                        <span class="square my-5 border-bottom border-1"></span>
+                        <span className="square my-5 border-bottom border-1"></span>
                     </MDBRow>
 
                     <MDBRow className='pb-5'>

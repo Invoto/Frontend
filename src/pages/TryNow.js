@@ -141,7 +141,7 @@ class TryNow extends React.Component {
                         <MDBCol md='6'>
                             <MDBCard color='primary'>
                                 <MDBCardBody className='output-body overflow-auto'>
-                                    <MDBCardTitle><h2>Upload Invoice Image</h2></MDBCardTitle>
+                                    <MDBCardTitle tag="h2">Upload Invoice Image</MDBCardTitle>
                                     <MDBCardSubTitle className='pt-3'>Please upload a scanned image of any invoice.</MDBCardSubTitle>
 
                                     <div className='file-container mt-3'>
@@ -167,7 +167,7 @@ class TryNow extends React.Component {
                         <MDBCol md='6'>
                             <MDBCard color='primary'>
                                 <MDBCardBody className='output-body overflow-auto'>
-                                    <MDBCardTitle><h2>Results</h2></MDBCardTitle>
+                                    <MDBCardTitle tag="h2">Results</MDBCardTitle>
                                     <MDBCardText>Submit an image of an invoice to start processing.</MDBCardText>
 
                                     {

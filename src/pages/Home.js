@@ -189,7 +189,7 @@ class Home extends React.Component {
               <MDBCard background='dark' className='text-white'>
                 <MDBCardImage overlay className='' src={ImageDev} alt='...' />
                 <MDBCardOverlay>
-                  <MDBCardTitle><h1>Built by Developers</h1></MDBCardTitle>
+                  <MDBCardTitle tag="h1">Built by Developers</MDBCardTitle>
                   <MDBCardText>
                     Invoto API has a proper documentation describing every parameter in every endpoint. Developers will not have to struggle understanding the requests they make. Play with the endpoints a bit and you will understand how they serve.
                   </MDBCardText>
