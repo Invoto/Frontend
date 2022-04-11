@@ -75,45 +75,43 @@ class TryNow extends React.Component {
                     this.context.showNotification("success", "Successfully received.");
                     this.setState({
                         extractionID: res.data.extraction_id,
+                    }, () => {
+                        this.timerTryNow = setInterval(() => {
+                            axios({
+                                method: "GET",
+                                baseURL: process.env.REACT_APP_BACKEND_URL,
+                                url: "/try-monitor/" + res.data.extraction_id,
+                                params: {
+                                    reqOutputs: true,
+                                },
+                                validateStatus: () => true,
+                            }).then((resExtraction) => {
+                                let resExtractionData = resExtraction.data;
+                                if (resExtractionData.status && resExtractionData.extractions.length > 0) {
+                                    let extraction = resExtractionData.extractions[0];
+                                    this.setState({
+                                        extractionOutputs: extraction.outputs,
+                                    });
+
+                                    if (extraction.jobStatus !== "QUEUED" && extraction.jobStatus !== "ONGOING") {
+                                        clearInterval(this.timerTryNow);
+                                    }
+
+                                    if (extraction.jobStatus === "COMPLETED") {
+                                        this.context.showNotification("success", "Extraction Completed.");
+                                    }
+                                    else if (extraction.jobStatus === "FAILED") {
+                                        this.context.showNotification("warning", "Extraction Failed.");
+                                    }
+                                }
+                                else {
+                                    this.context.showNotification("error", "Request Failed.");
+                                }
+                            }).catch((error) => {
+                                this.context.showNotification("error", error.message);
+                            });
+                        }, 1000);
                     });
-
-                    this.timerTryNow = setInterval(() => {
-                        axios({
-                            method: "GET",
-                            baseURL: process.env.REACT_APP_BACKEND_URL,
-                            url: "/extractions/" + res.data.extraction_id,
-                            params: {
-                                reqOutputs: true,
-                                usageType: "TRYNOW",
-                            },
-                            validateStatus: () => true,
-                        }).then((resExtraction) => {
-                            let resExtractionData = resExtraction.data;
-                            if (resExtractionData.status && resExtractionData.extractions.length > 0) {
-                                let extraction = resExtractionData.extractions[0];
-                                this.setState({
-                                    extractionOutputs: extraction.outputs,
-                                });
-
-                                if (extraction.jobStatus !== "QUEUED" && extraction.jobStatus !== "ONGOING") {
-                                    clearInterval(this.timerTryNow);
-                                }
-
-                                if (extraction.jobStatus === "COMPLETED") {
-                                    this.context.showNotification("success", "Extraction Completed.");
-                                }
-                                else if (extraction.jobStatus === "FAILED") {
-                                    this.context.showNotification("warning", "Extraction Failed.");
-                                }
-                            }
-                            else {
-                                this.context.showNotification("error", "Request Failed.");
-                            }
-                        }).catch((error) => {
-                            console.log(error);
-                            this.context.showNotification("error", error.message);
-                        });
-                    }, 1000);
                 }
                 else {
                     this.context.closeNotification();
