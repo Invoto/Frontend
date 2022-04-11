@@ -11,6 +11,11 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import ExtractionsTable from '../../components/Tables/ExtractionsTable';
 const axios = require('axios').default;
 
 class DashboardDeveloper extends React.Component {
@@ -24,9 +29,12 @@ class DashboardDeveloper extends React.Component {
             tabValue: "overview",
             userAPIKeyFetchState: true,
             userAPIKey: "",
+
+            developerExtractions: [],
         };
 
         this.fetchAPIKey = this.fetchAPIKey.bind(this);
+        this.fetchDeveloperExtractions = this.fetchDeveloperExtractions.bind(this);
     }
 
     fetchAPIKey() {
@@ -60,10 +68,49 @@ class DashboardDeveloper extends React.Component {
         });
     }
 
+    fetchDeveloperExtractions() {
+        this.context.showNotification("info", "Please wait...");
+
+        axios({
+            method: "GET",
+            baseURL: process.env.REACT_APP_BACKEND_URL,
+            url: "/extractions",
+            headers: {
+                "Authorization": "Bearer " + this.context.userToken,
+            },
+            params: {
+                reqOutputs: true,
+                usageType: "DEVELOPER",
+            },
+            validateStatus: () => true,
+        }).then((res) => {
+            let resData = res.data;
+
+            if (resData.status) {
+                if (resData.extractions.length == 0) {
+                    this.context.closeNotification();
+                    this.context.showNotification("info", "No Extractions Found.");
+                }
+
+                this.setState({
+                    developerExtractions: resData.extractions,
+                });
+            }
+            else {
+                this.context.closeNotification();
+                this.context.showNotification("error", resData.message);
+            }
+        }).catch((error) => {
+            this.context.closeNotification();
+            this.context.showNotification("error", error.message);
+        });
+    }
+
     componentDidMount() {
         this.context.setPageTitle("Developer");
 
         this.fetchAPIKey();
+        this.fetchDeveloperExtractions();
     }
 
     render() {
@@ -129,7 +176,18 @@ class DashboardDeveloper extends React.Component {
                             </Box>
                         </div>
                     </TabPanel>
-                    <TabPanel value="extractions">Item Two</TabPanel>
+                    <TabPanel value="extractions">
+                        <AppBar position="static">
+                            <Toolbar>
+                                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                                    API Extractions
+                                </Typography>
+                                <Button color="inherit" onClick={this.fetchDeveloperExtractions}>Refresh</Button>
+                            </Toolbar>
+                        </AppBar>
+
+                        <ExtractionsTable extractions={this.state.developerExtractions} rowsPerPage={10} />
+                    </TabPanel>
                     <TabPanel value="quota">Item Three</TabPanel>
                 </TabContext>
             </Box>
