@@ -8,15 +8,20 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import ExtractionsTableRow from "./ExtractionTableRow";
 import TableRow from "@mui/material/TableRow";
-import Link from '@mui/material/Link';
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
+import { DateTime } from "luxon";
 
 const extractionTableColumns = [
     { id: "id", label: "ID", minWidth: 80 },
     { id: "imageURL", label: "Image", minWidth: 150 },
     { id: "jobStatus", label: "Status", minWidth: 170 },
-    { id: "createdAt", label: "Date/Time", minWidth: 170 },
+    {
+        id: "createdAt",
+        label: "Date/Time",
+        minWidth: 170,
+        format: (dateString) => {
+            return DateTime.fromISO(dateString).toFormat("yyyy-MMM-dd hh:mm:ssa ZZZZ");
+        },
+    },
 ];
 
 class ExtractionsTable extends React.Component {

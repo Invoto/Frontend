@@ -74,7 +74,12 @@ class ExtractionsTableRow extends React.Component {
                         else {
                             return (
                                 <TableCell key={column.id} align="center">
-                                    {value}
+                                    {
+                                        column.format ?
+                                            column.format(value)
+                                            :
+                                            value
+                                    }
                                 </TableCell>
                             );
                         }
