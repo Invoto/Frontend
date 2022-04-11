@@ -90,7 +90,7 @@ class TryNow extends React.Component {
                                 if (resExtractionData.status && resExtractionData.extractions.length > 0) {
                                     let extraction = resExtractionData.extractions[0];
                                     this.setState({
-                                        extractionOutputs: extraction.outputs,
+                                        extractionOutputs: extraction.outputs.reverse(),
                                     });
 
                                     if (extraction.jobStatus !== "QUEUED" && extraction.jobStatus !== "ONGOING") {

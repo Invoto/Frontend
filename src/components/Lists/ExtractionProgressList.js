@@ -43,7 +43,7 @@ class ExtractionProgressList extends React.Component {
             <div>
                 <List sx={{ ...{ width: '100%', bgcolor: 'background.paper' }, ...this.props.sx }}>
                     {
-                        this.props.itemsList.reverse().map((item, idx) => {
+                        this.props.itemsList.map((item, idx) => {
                             return (
                                 <ListItem alignItems="flex-start" key={idx}>
                                     <ListItemButton onClick={() => { this.handleListItemClick(item); }}>
