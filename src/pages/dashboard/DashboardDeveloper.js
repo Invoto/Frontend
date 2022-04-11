@@ -4,9 +4,6 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import TabPanel from "../../components/Tabs/TabPanel";
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-// import TabPanel from '@mui/lab/TabPanel';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -16,8 +13,8 @@ import TextField from '@mui/material/TextField';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import ExtractionsTable from '../../components/Tables/ExtractionsTable';
+import ExtractionQuotaChart from '../../components/Charts/ExtractionQuotaChart';
 const axios = require('axios').default;
 
 class DashboardDeveloper extends React.Component {
@@ -29,17 +26,18 @@ class DashboardDeveloper extends React.Component {
 
         this.state = {
             tabValue: 0,
-            userAPIKeyFetchState: true,
+            userDeveloperProfileFetchState: true,
+            userDeveloperProfile: null,
             userAPIKey: "",
 
             developerExtractions: [],
         };
 
-        this.fetchAPIKey = this.fetchAPIKey.bind(this);
+        this.fetchAPIKey = this.fetchUserDeveloperProfile.bind(this);
         this.fetchDeveloperExtractions = this.fetchDeveloperExtractions.bind(this);
     }
 
-    fetchAPIKey() {
+    fetchUserDeveloperProfile() {
         axios({
             method: "GET",
             baseURL: process.env.REACT_APP_BACKEND_URL,
@@ -53,19 +51,19 @@ class DashboardDeveloper extends React.Component {
 
             if (resData.status) {
                 this.setState({
-                    userAPIKey: resData.DeveloperProfile.apiKey,
+                    userDeveloperProfile: resData.DeveloperProfile,
                 });
             }
             else {
-                this.context.showNotification("error", "Failure to fetch API Key.");
+                this.context.showNotification("error", "Failure to fetch Developer Profile.");
                 this.setState({
-                    userAPIKeyFetchState: false,
+                    userDeveloperProfileFetchState: false,
                 });
             }
         }).catch((error) => {
             this.context.showNotification("error", error.message);
             this.setState({
-                userAPIKeyFetchState: false,
+                userDeveloperProfileFetchState: false,
             });
         });
     }
@@ -111,7 +109,7 @@ class DashboardDeveloper extends React.Component {
     componentDidMount() {
         this.context.setPageTitle("Developer");
 
-        this.fetchAPIKey();
+        this.fetchUserDeveloperProfile();
         this.fetchDeveloperExtractions();
     }
 
@@ -161,8 +159,13 @@ class DashboardDeveloper extends React.Component {
                                             </Typography>
 
                                             <TextField
-                                                value={this.state.userAPIKey}
-                                                disabled={!this.state.userAPIKeyFetchState}
+                                                value={
+                                                    this.state.userDeveloperProfile ?
+                                                        this.state.userDeveloperProfile.apiKey
+                                                        :
+                                                        ""
+                                                }
+                                                disabled={!this.state.userDeveloperProfileFetchState}
                                                 InputProps={{
                                                     readOnly: true,
                                                 }}
@@ -188,8 +191,10 @@ class DashboardDeveloper extends React.Component {
 
                     <ExtractionsTable extractions={this.state.developerExtractions} rowsPerPage={10} />
                 </TabPanel>
-                <TabPanel value={this.state.tabValue} index={2}>Item Three</TabPanel>
-            </Box>
+                <TabPanel value={this.state.tabValue} index={2}>
+                    <ExtractionQuotaChart extractionProfile={this.state.userDeveloperProfile} />
+                </TabPanel>
+            </Box >
         );
     }
 
