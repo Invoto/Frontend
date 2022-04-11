@@ -84,11 +84,11 @@ class DashboardDeveloper extends React.Component {
             },
             validateStatus: () => true,
         }).then((res) => {
-            let resData = res.data;
+            this.context.closeNotification();
 
+            let resData = res.data;
             if (resData.status) {
                 if (resData.extractions.length == 0) {
-                    this.context.closeNotification();
                     this.context.showNotification("info", "No Extractions Found.");
                 }
 
@@ -97,7 +97,6 @@ class DashboardDeveloper extends React.Component {
                 });
             }
             else {
-                this.context.closeNotification();
                 this.context.showNotification("error", resData.message);
             }
         }).catch((error) => {
