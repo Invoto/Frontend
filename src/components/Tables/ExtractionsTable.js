@@ -69,6 +69,7 @@ class ExtractionsTable extends React.Component {
 
                         <TableBody>
                             {this.props.extractions
+                                .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
                                 .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
                                 .map((extraction) => {
                                     return (
