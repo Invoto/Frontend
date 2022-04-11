@@ -19,6 +19,8 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import ExtractionProgressList from "../../components/Lists/ExtractionProgressList";
+import ExtractionQuotaChart from '../../components/Charts/ExtractionQuotaChart';
+import ExtractionsTable from '../../components/Tables/ExtractionsTable';
 const axios = require('axios').default;
 
 const Input = styled('input')({
@@ -39,6 +41,10 @@ class DashboardExtraction extends React.Component {
 
             extractionID: null,
             extractionOutputs: [],
+
+            userConsumerProfileFetchState: true,
+            userConsumerProfile: null,
+            consumerExtractions: [],
         };
 
         this.timerExtract = null;
@@ -46,10 +52,8 @@ class DashboardExtraction extends React.Component {
         this.handleExtractImageChange = this.handleExtractImageChange.bind(this);
         this.handleExtractImageSubmit = this.handleExtractImageSubmit.bind(this);
         this.handleExtractorReset = this.handleExtractorReset.bind(this);
-    }
-
-    componentDidMount() {
-        this.context.setPageTitle("Extraction");
+        this.fetchConsumerProfile = this.fetchConsumerProfile.bind(this);
+        this.fetchConsumerExtractions = this.fetchConsumerExtractions.bind(this);
     }
 
     handleExtractImageChange(event) {
@@ -166,6 +170,82 @@ class DashboardExtraction extends React.Component {
         });
     }
 
+    fetchConsumerProfile() {
+        axios({
+            method: "GET",
+            baseURL: process.env.REACT_APP_BACKEND_URL,
+            url: "/user",
+            headers: {
+                "Authorization": "Bearer " + this.context.userToken,
+            },
+            validateStatus: () => true,
+        }).then((res) => {
+            let resData = res.data;
+
+            if (resData.status) {
+                this.setState({
+                    userConsumerProfile: resData.ConsumerProfile,
+                });
+            }
+            else {
+                this.context.showNotification("error", "Failure to fetch Consumer Profile.");
+                this.setState({
+                    userConsumerProfileFetchState: false,
+                });
+            }
+        }).catch((error) => {
+            this.context.showNotification("error", error.message);
+            this.setState({
+                userConsumerProfileFetchState: false,
+            });
+        });
+    }
+
+    fetchConsumerExtractions() {
+        this.context.showNotification("info", "Please wait...");
+
+        axios({
+            method: "GET",
+            baseURL: process.env.REACT_APP_BACKEND_URL,
+            url: "/extractions",
+            headers: {
+                "Authorization": "Bearer " + this.context.userToken,
+            },
+            params: {
+                reqOutputs: true,
+                usageType: "CONSUMER",
+            },
+            validateStatus: () => true,
+        }).then((res) => {
+            let resData = res.data;
+
+            if (resData.status) {
+                if (resData.extractions.length == 0) {
+                    this.context.closeNotification();
+                    this.context.showNotification("info", "No Extractions Found.");
+                }
+
+                this.setState({
+                    consumerExtractions: resData.extractions,
+                });
+            }
+            else {
+                this.context.closeNotification();
+                this.context.showNotification("error", resData.message);
+            }
+        }).catch((error) => {
+            this.context.closeNotification();
+            this.context.showNotification("error", error.message);
+        });
+    }
+
+    componentDidMount() {
+        this.context.setPageTitle("Extraction");
+
+        this.fetchConsumerProfile();
+        this.fetchConsumerExtractions();
+    }
+
     render() {
         return (
             <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -272,6 +352,23 @@ class DashboardExtraction extends React.Component {
                             </Card>
                         </Grid>
                     </Grid>
+                </TabPanel>
+
+                <TabPanel value={this.state.tabValue} index={1}>
+                    <AppBar position="static">
+                        <Toolbar>
+                            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                                Extraction History
+                            </Typography>
+                            <Button color="inherit" onClick={this.fetchConsumerExtractions}>Refresh</Button>
+                        </Toolbar>
+                    </AppBar>
+
+                    <ExtractionsTable extractions={this.state.consumerExtractions} rowsPerPage={10} />
+                </TabPanel>
+
+                <TabPanel value={this.state.tabValue} index={2}>
+                    <ExtractionQuotaChart extractionProfile={this.state.userConsumerProfile} />
                 </TabPanel>
             </Box>
         );
