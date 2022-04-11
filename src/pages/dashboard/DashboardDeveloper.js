@@ -124,7 +124,7 @@ class DashboardDeveloper extends React.Component {
                             });
                         }} aria-label="lab API tabs example">
                             <Tab label="Overview" value="overview" />
-                            <Tab label="Extractions" value="extractions" />
+                            <Tab label="History" value="extractions" />
                             <Tab label="Quota" value="quota" />
                         </TabList>
                     </Box>
