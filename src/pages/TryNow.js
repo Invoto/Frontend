@@ -80,7 +80,7 @@ class TryNow extends React.Component {
                             axios({
                                 method: "GET",
                                 baseURL: process.env.REACT_APP_BACKEND_URL,
-                                url: "/try-monitor/" + res.data.extraction_id,
+                                url: "/public/try-monitor/" + res.data.extraction_id,
                                 params: {
                                     reqOutputs: true,
                                 },
